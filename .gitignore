@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+**/build/
+
+# Local configuration
+local.properties
+gradle.properties
+
+# Signing keys and certificates
+*.jks
+*.keystore
+*.p12
+*.pem
+*.der
+
+# IDE
+.idea/
+*.iml
+.DS_Store
