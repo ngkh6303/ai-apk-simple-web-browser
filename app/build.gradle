@@ -4,13 +4,40 @@ plugins {
 
 android {
     namespace 'com.example.simplebrowser'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId 'com.example.simplebrowser'
         minSdk 23
-        targetSdk 35
+        targetSdk 36
         versionCode 1
         versionName '1.0'
+    }
+
+    def storeFilePath = project.findProperty('SIMPLEBROWSER_STORE_FILE')
+    def storePasswordValue = project.findProperty('SIMPLEBROWSER_STORE_PASSWORD')
+    def keyAliasValue = project.findProperty('SIMPLEBROWSER_KEY_ALIAS')
+    def keyPasswordValue = project.findProperty('SIMPLEBROWSER_KEY_PASSWORD')
+    def hasReleaseSigning = storeFilePath && storePasswordValue && keyAliasValue && keyPasswordValue
+
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(storeFilePath)
+                storePassword storePasswordValue
+                keyAlias keyAliasValue
+                keyPassword keyPasswordValue
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled false
+            shrinkResources false
+        }
     }
 }

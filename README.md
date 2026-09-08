@@ -11,10 +11,10 @@
 
 ## 建置環境
 
-- Android SDK Platform 35
+- Android SDK Platform 36
 - Android Build Tools 35.0.0
 - JDK 21
-- Gradle 8.10.2
+- Gradle 8.10.2（已附 Gradle Wrapper）
 
 ## 建置 Debug APK
 
@@ -25,23 +25,32 @@ export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
 
 輸出位置：`app/build/outputs/apk/debug/app-debug.apk`
 
-## 建置 Google Play 用 Release AAB
+## Google Play 上架
 
-請先在 `~/.gradle/gradle.properties` 設定本機 Upload Key 資料，不要將 keystore 或密碼提交到 GitHub：
+完整流程請參閱：
 
-```properties
-SIMPLEBROWSER_STORE_FILE=/absolute/path/to/simplebrowser-upload.jks
-SIMPLEBROWSER_STORE_PASSWORD=your_keystore_password
-SIMPLEBROWSER_KEY_ALIAS=simplebrowser-upload
-SIMPLEBROWSER_KEY_PASSWORD=your_key_password
-```
+- [完整 Google Play release guide](docs/GOOGLE_PLAY_RELEASE.md)
+- [GitHub Actions release workflow](.github/workflows/android-release.yml)
 
-然後在 `app/build.gradle` 加入 release signing config，再執行：
+文件包括：
 
-```bash
-./gradlew bundleRelease
-```
+- 設定永久 application ID
+- 建立及保護 Upload Key
+- 本機 release signing
+- 建立及驗證 signed AAB
+- Google Play App Signing
+- Internal testing、production release 及版本更新
+- GitHub Actions encrypted secrets 及手動 release build
+- 常見簽名、version code 及 fingerprint 問題
 
-輸出位置：`app/build/outputs/bundle/release/app-release.aab`
+## 安全提示
 
-Google Play 新 app 應使用 Android App Bundle，並啟用 Play App Signing。Upload Key 必須安全保存；不要上載 `.jks`、密碼或任何 private key。
+不要將以下內容提交到 GitHub：
+
+- `.jks` / `.keystore`
+- private key
+- keystore 或 key password
+- Google Play service-account JSON
+- `~/.gradle/gradle.properties`
+
+這些檔案已經由 `.gitignore` 排除。
